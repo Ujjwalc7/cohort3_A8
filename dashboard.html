@@ -1,0 +1,100 @@
+<h1 class="dashboardH1">Dashboard</h1>
+<p class="dashboardP">Real-time tracking application.</p>
+
+<section class="cards">
+  <div class="card">
+    <div class="imgDiv">
+      <img src="./images/bank.png" alt="image" />
+    </div>
+    <div>
+      <p class="tags">Current Balance</p>
+      <p class="amount">-$60.00</p>
+    </div>
+  </div>
+  <div class="card">
+    <div class="imgDiv">
+      <img src="./images/up.png" alt="image" />
+    </div>
+    <div>
+      <p class="tags">Total Income</p>
+      <p class="amount">$60.00</p>
+    </div>
+  </div>
+  <div class="card">
+    <div class="imgDiv">
+      <img src="./images/decrease.png" alt="image" />
+    </div>
+    <div>
+      <p class="tags">Total Expense</p>
+      <p class="amount">-$60.00</p>
+    </div>
+  </div>
+  <div class="card">
+    <div class="imgDiv">
+      <img src="./images/piggy-bank.png" alt="image" />
+    </div>
+    <div>
+      <p class="tags">Total Transaction</p>
+      <p class="amount">3</p>
+    </div>
+  </div>
+</section>
+<section class="cashFlowSection">
+  <div class="outerDiv">
+    <div class="chart-container">
+      <h2>Cash Flow Analysis</h2>
+      <canvas id="myChart" style="height: 30vh; width: 54vw"></canvas>
+    </div>
+    <div class="prefDiv">
+      <h2>Preferences</h2>
+      <div class="darkModeSec">
+        <p>Dark Mode</p>
+        <label class="switch">
+          <input id="checkbox" type="checkbox" />
+          <span class="slider"></span>
+        </label>
+      </div>
+      <hr />
+      <button class="resetBtn">
+        <i class="ri-delete-bin-6-fill"></i> Reset All Data
+      </button>
+    </div>
+  </div>
+</section>
+<section class="transactions">
+  <h2>All Transactions</h2>
+  <div class="searchDiv">
+    <div class="inputDiv">
+      <i class="ri-search-line"></i>
+      <input type="text" name="" id="" placeholder="Search transactions..." />
+    </div>
+    <select name="" id="selectDiv">
+      <option value="All Types">All Types</option>
+      <option value="Income Only">Income Only</option>
+      <option value="Expense Only">Expense Only</option>
+    </select>
+  </div>
+  <div class="tableContainer">
+    <table>
+      <colgroup>
+        <col style="width: 10%" class="date"/>
+        <col style="width: 60%" class="description"/>
+        <col style="width: 10%" class="category"/>
+        <col style="width: 10%" class="amount"/>
+        <col style="width: 10%" class="actions"/>
+      </colgroup>
+      <thead>
+        <tr>
+          <th>DATE</th>
+          <th>DESCRIPTION</th>
+          <th>CATEGORY</th>
+          <th>AMOUNT</th>
+          <th>ACTIONS</th>
+        </tr>
+      </thead>
+      <tbody class="tableBody">
+
+      </tbody>
+    </table>
+  </div>
+</section>

@@ -1,0 +1,23 @@
+<h1 class="settingsH1">Settings</h1>
+<p class="settingsP">Manage your account profile and app formatting.</p>
+
+<form id="settingsForm">
+  <legend>Profile Details</legend>
+  <div class="formGroup">
+    <div class="settingsFormDiv">
+      <label for="name">Full Name</label>
+      <input type="text" id="name" />
+    </div>
+    <div class="settingsFormDiv">
+      <label for="currency">Primary Currency</label>
+      <select id="currency" required>
+        <option value="$">USD ($)</option>
+        <option value="€">EUR (€)</option>
+        <option value="£">GBP (£)</option>
+        <option value="₹">INR (₹)</option>
+        <option value="¥">JPY (¥)</option>
+      </select>
+    </div>
+  </div>
+  <button class="">Save Changes</button>
+</form>
