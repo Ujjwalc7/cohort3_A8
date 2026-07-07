@@ -1,16 +1,25 @@
+let user = JSON.parse(localStorage.getItem("loggedInUser"));
+if (user === null) {
+  window.location.href = "index.html";
+}
+
+let users = JSON.parse(localStorage.getItem("users"));
+const username = document.querySelector("#username");
 const links = document.querySelectorAll("[data-page]");
 const content = document.querySelector(".content");
 const addBtn = document.querySelector(".addBtn");
-let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
 const formDiv = document.querySelector(".formDiv");
 const form = document.querySelector("form");
 const closeForm = document.querySelector(".closeForm");
+const logoutBtn = document.querySelector("#logoutBtn");
 let editableObj = null;
 let chart = null;
 let balance = 0;
 let income = 0;
 let expense = 0;
 let transaction = 0;
+
+username.innerHTML = user.userName;
 
 closeForm.addEventListener("click", () => {
   formDiv.style.display = "none";
@@ -19,6 +28,11 @@ closeForm.addEventListener("click", () => {
 
 form.addEventListener("click", (e) => {
   e.stopPropagation();
+});
+
+logoutBtn.addEventListener("click", (e) => {
+  localStorage.removeItem("loggedInUser");
+  window.location.href = "index.html";
 });
 
 form.addEventListener("submit", (e) => {
@@ -38,8 +52,11 @@ form.addEventListener("submit", (e) => {
       date,
       category,
     };
-    transactions.push(obj);
-    localStorage.setItem("transactions", JSON.stringify(transactions));
+    user.transactions.push(obj);
+    const index = users.findIndex((e) => e.id === user.id);
+    users[index] = user;
+    localStorage.setItem("users", JSON.stringify(users));
+    localStorage.setItem("loggedInUser", JSON.stringify(user));
     insertTransaction();
     form.reset();
   } else {
@@ -48,9 +65,17 @@ form.addEventListener("submit", (e) => {
     editableObj["amount"] = e.target[2].value;
     editableObj["date"] = e.target[3].value;
     editableObj["category"] = e.target[4].value;
-    const index = transactions.findIndex((i) => i === editableObj.id);
-    transactions[index] = editableObj;
-    localStorage.setItem("transactions", JSON.stringify(transactions));
+    const index = user.transactions.findIndex((i) => i.id === editableObj.id);
+    console.log(index);
+    user.transactions[index] = editableObj;
+    users.forEach((ele) => {
+      if (ele.id === user.id) {
+        ele = user;
+        return;
+      }
+    });
+    localStorage.setItem("loggedInUser", JSON.stringify(user));
+    localStorage.setItem("users", JSON.stringify(users));
     insertTransaction();
     form.reset();
     editableObj = null;
@@ -60,13 +85,13 @@ form.addEventListener("submit", (e) => {
 
 function insertTransaction() {
   const tableBody = document.querySelector(".tableBody");
-  if (transactions.length === 0) {
+  if (user.transactions.length === 0) {
     tableBody.innerHTML = `<h3 style="white-space: nowrap; margin-top: 10px">No Transactions</h3>`;
     loadAmount();
     return;
   }
   tableBody.innerHTML = "";
-  transactions.forEach((data) => {
+  user.transactions.forEach((data) => {
     tableBody.innerHTML += `        <tr>
           <td>${data.date}</td>
           <td>${data.des}</td>
@@ -82,7 +107,7 @@ function insertTransaction() {
 }
 
 function tableEdit(id) {
-  editableObj = transactions.find((e) => e.id === id);
+  editableObj = user.transactions.find((e) => e.id === id);
   formDiv.style.display = "flex";
   form.elements[0].value = editableObj.type;
   form.elements[1].value = editableObj.des;
@@ -94,9 +119,16 @@ function tableEdit(id) {
 function tableRemove(id) {
   const isConfirmed = confirm("Are you sure you want to delete transaction?");
   if (isConfirmed) {
-    const index = transactions.findIndex((ele) => ele.id === id);
-    transactions.splice(index, 1);
-    localStorage.setItem("transactions", JSON.stringify(transactions));
+    const index = user.transactions.findIndex((ele) => ele.id === id);
+    user.transactions.splice(index, 1);
+    users.forEach((ele) => {
+      if (ele.id === user.id) {
+        ele = user;
+        return;
+      }
+    });
+    localStorage.setItem("loggedInUser", JSON.stringify(user));
+    localStorage.setItem("users", JSON.stringify(users));
     insertTransaction();
   } else {
     return;
@@ -134,8 +166,8 @@ function loadAmount() {
   balance = 0;
   income = 0;
   expense = 0;
-  transaction = transactions.length;
-  transactions.forEach((ele) => {
+  transaction = user.transactions.length;
+  user.transactions.forEach((ele) => {
     if (ele.type === "Income") {
       income += Number(ele.amount);
       balance += Number(ele.amount);
@@ -167,8 +199,15 @@ async function loadPage(page) {
     const resetBtn = document.querySelector("#resetBtn");
 
     resetBtn.addEventListener("click", (e) => {
-      localStorage.clear();
-      transactions = [];
+      user.transactions = [];
+      users.forEach((ele) => {
+        if (ele.id === user.id) {
+          ele = user;
+          return;
+        }
+      });
+      localStorage.setItem("loggedInUser", JSON.stringify(user));
+      localStorage.setItem("users", JSON.stringify(users));
       insertTransaction();
     });
     checked.addEventListener("click", (e) => {
@@ -215,20 +254,18 @@ async function loadPage(page) {
       },
     });
     filterDiv.addEventListener("change", (e) => {
-      console.log(e.target.value);
-
       if (e.target.value === "All") {
-        transactions = JSON.parse(localStorage.getItem("transactions")) || [];
+        user = JSON.parse(localStorage.getItem("loggedInUser"));
         insertTransaction();
       } else if (e.target.value === "Income") {
-        transactions = JSON.parse(localStorage.getItem("transactions")) || [];
-        transactions = transactions.filter(
+        user = JSON.parse(localStorage.getItem("loggedInUser"));
+        user.transactions = transactions.filter(
           (ele) => ele.type === e.target.value,
         );
         insertTransaction();
       } else {
-        transactions = JSON.parse(localStorage.getItem("transactions")) || [];
-        transactions = transactions.filter(
+        user = JSON.parse(localStorage.getItem("loggedInUser"));
+        user.transactions = transactions.filter(
           (ele) => ele.type === e.target.value,
         );
         insertTransaction();

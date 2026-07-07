@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="registerStyle.css" />
+    <title>Document</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.9.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <main>
+      <div class="auth-card">
+        <h2>Create Account</h2>
+        <p>Join FinTrack Pro</p>
+        <form id="registerForm">
+          <div class="register-form-group">
+            <label>Choose a Username</label>
+            <input type="text" id="regUsername" required />
+          </div>
+          <div class="register-form-group">
+            <label>Password</label>
+            <input type="password" id="regPassword" required />
+          </div>
+          <button type="submit">Register</button>
+        </form>
+        <p style="margin-top: 15px; font-size: 14px">
+          "Already have an account? "
+          <a href="index.html">Login here</a>
+        </p>
+      </div>
+    </main>
+    <script>
+      const form = document.querySelector("form");
+      const users = JSON.parse(localStorage.getItem("users")) || [];
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const userName = e.target[0].value.trim();
+        const password = e.target[1].value.trim();
+        const obj = {
+          id: `${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+          userName,
+          password,
+          transactions: [],
+        };
+        users.push(obj);
+        localStorage.setItem("users", JSON.stringify(users));
+        localStorage.setItem("loggedInUser", JSON.stringify(obj));
+        window.location.href = "content.html";
+      });
+    </script>
+  </body>
+</html>

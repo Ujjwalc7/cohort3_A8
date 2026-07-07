@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="indexStyle.css" />
     <link
       href="https://cdn.jsdelivr.net/npm/remixicon@4.9.0/fonts/remixicon.css"
       rel="stylesheet"
@@ -12,87 +12,49 @@
   </head>
   <body>
     <main>
-      <div class="formDiv">
-        <form class="form">
-          <div class="formHeaderDiv">
-            <h2>Add Transaction</h2>
-            <p class="closeForm">x</p>
+      <div class="auth-card">
+        <h2>Welcome Back</h2>
+        <p>Login to Fintrack Pro</p>
+        <form id="loginForm">
+          <div class="login-form-group">
+            <label for="loginUsername">Username</label>
+            <input type="text" name="" id="loginUsername" required />
           </div>
-          <div class="formGroup">
-            <label for="type">Type</label>
-            <select id="type" required>
-              <option value="Expense">Expense</option>
-              <option value="Income">Income</option>
-            </select>
+          <div class="login-form-group">
+            <label for="loginPassword">Password</label>
+            <input type="password" name="" id="loginPassword" required />
           </div>
-          <div class="formGroup">
-            <label for="description">Description</label>
-            <input
-              type="text"
-              id="description"
-              placeholder="e.g. Amazon, Salary, Coffee"
-              required
-            />
-          </div>
-
-          <div class="amountDiv">
-            <div class="amountDivGroup">
-              <label for="amount">Amount</label>
-              <input type="number" name="" id="amount" step="0.01" min="0" required />
-            </div>
-            <div class="amountDivGroup">
-              <label for="date">Date</label>
-              <input type="date" name="" id="date" required />
-            </div>
-          </div>
-          <div class="formGroup">
-            <label for="category">Category</label>
-            <select id="category" required>
-              <option value="">select a category</option>
-              <option value="Food & Drinking">Food & Drinking</option>
-              <option value="Shopping">Shopping</option>
-              <option value="Recharge & Bills">Recharge & Bills</option>
-              <option value="Petrol & Auto">Petrol & Auto</option>
-              <option value="Utilities">Utilities</option>
-              <option value="Salary">Salary</option>
-              <option value="Entertainment">Entertainment</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
-
-          <button type="submit">Save Transaction</button>
+          <button type="submit">Login</button>
         </form>
+        <p style="margin-top: 15px; font-size: 14px">
+          "Don't have an account? "
+          <a href="register.html">Register here</a>
+        </p>
       </div>
-      <aside>
-        <header>
-          <i class="ri-stack-line"></i>
-          <h1>
-            FintTrack Pro <br />
-            <span>Enterprise Finance</span>
-          </h1>
-        </header>
-        <ul>
-          <li class="active" data-page="dashboard.html">
-            <i class="ri-dashboard-line"></i> Dashboard
-          </li>
-          <li class="" data-page="settings.html">
-            <i class="ri-settings-4-fill"></i> Settings
-          </li>
-        </ul>
-        <button class="addBtn">+ Add Transaction</button>
-      </aside>
-      <section class="container">
-        <header>
-          <div></div>
-          <nav>
-            <h1>Ujjwal</h1>
-            <button><i class="ri-logout-box-r-line"></i> Logout</button>
-          </nav>
-        </header>
-        <section class="content"></section>
-      </section>
     </main>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="script.js"></script>
+    <script>
+      const form = document.querySelector("form");
+      const users = JSON.parse(localStorage.getItem("users"));
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const userName = e.target[0].value;
+        const password = e.target[1].value;
+        if (users === null) {
+          alert("Invalid Username or Password");
+          return;
+        }
+        const userFound = users.find(user => user.userName === userName && user.password === password);
+        console.log(userFound);
+        
+        if (userFound !== undefined) {
+          localStorage.setItem("loggedInUser", JSON.stringify(userFound));
+          window.location.href = "content.html";
+        } else {
+          alert("Invalid Username or Password");
+          return;
+        }
+      });
+    </script>
   </body>
 </html>
