@@ -12,6 +12,7 @@ const formDiv = document.querySelector(".formDiv");
 const form = document.querySelector("form");
 const closeForm = document.querySelector(".closeForm");
 const logoutBtn = document.querySelector("#logoutBtn");
+let darkMode = false;
 let editableObj = null;
 let chart = null;
 let balance = 0;
@@ -191,7 +192,7 @@ async function loadPage(page) {
     const filterDiv = document.querySelector("#filterDiv");
     const resetBtn = document.querySelector("#resetBtn");
     const searchInput = document.querySelector("#searchInput");
-
+    checked.checked = darkMode;
     resetBtn.addEventListener("click", (e) => {
       user.transactions = [];
       const index = users.findIndex((ele) => ele.id === user.id);
@@ -203,8 +204,10 @@ async function loadPage(page) {
     checked.addEventListener("click", (e) => {
       if (e.target.checked) {
         document.body.classList.add("dark");
+        darkMode = e.target.checked;
       } else {
         document.body.classList.remove("dark");
+        darkMode = e.target.checked;
       }
     });
     insertTransaction();
