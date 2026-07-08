@@ -89,10 +89,10 @@ function insertTransaction() {
   }
   tableBody.innerHTML = "";
   user.transactions.forEach((data) => {
-    tableBody.innerHTML += `        <tr>
+    tableBody.innerHTML += `<tr>
           <td>${data.date}</td>
           <td style="font-weight: bold;">${data.des}</td>
-          <td>${data.category}</td>
+          <td><span id="category">${data.category}</span></td>
           <td style="font-weight: bold; ${data.type === "Income" ? "color: green" : "color: rgb(189, 2, 2)"}">${data.type === "Income" ? "+" : "-"}${user.currency}${data.amount}</td>
           <td>
             <button class="tableEditBtn" onclick="tableEdit('${data.id}')"><i class="ri-pencil-fill"></i></button>
@@ -277,8 +277,10 @@ async function loadPage(page) {
   } else {
     const settingsForm = document.querySelector("#settingsForm");
     const name = document.querySelector("#name");
+    const currencySelect = document.querySelector("#currency");
 
     name.value = user.userName;
+    currencySelect.value = user.currency;
     settingsForm.addEventListener("submit", (e) => {
       e.preventDefault();
       const userName = e.target[0].value.trim();
