@@ -190,6 +190,7 @@ async function loadPage(page) {
     const checked = document.querySelector("#checkbox");
     const filterDiv = document.querySelector("#filterDiv");
     const resetBtn = document.querySelector("#resetBtn");
+    const searchInput = document.querySelector("#searchInput");
 
     resetBtn.addEventListener("click", (e) => {
       user.transactions = [];
@@ -259,6 +260,19 @@ async function loadPage(page) {
         );
         insertTransaction();
       }
+    });
+
+    searchInput.addEventListener("input", () => {
+      user = JSON.parse(localStorage.getItem("loggedInUser"));
+      const search = searchInput.value.trim().toLowerCase();
+
+      user.transactions = user.transactions.filter((transaction) => {
+        return (
+          transaction.des.toLowerCase().includes(search) ||
+          transaction.category.toLowerCase().includes(search)
+        );
+      });
+      insertTransaction();
     });
   } else {
     const settingsForm = document.querySelector("#settingsForm");
