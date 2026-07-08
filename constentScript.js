@@ -65,15 +65,12 @@ form.addEventListener("submit", (e) => {
     editableObj["amount"] = e.target[2].value;
     editableObj["date"] = e.target[3].value;
     editableObj["category"] = e.target[4].value;
-    const index = user.transactions.findIndex((i) => i.id === editableObj.id);
-    console.log(index);
-    user.transactions[index] = editableObj;
-    users.forEach((ele) => {
-      if (ele.id === user.id) {
-        ele = user;
-        return;
-      }
-    });
+    const objIndex = user.transactions.findIndex(
+      (i) => i.id === editableObj.id,
+    );
+    user.transactions[objIndex] = editableObj;
+    const index = users.findIndex((ele) => ele.id === user.id);
+    users[index] = user;
     localStorage.setItem("loggedInUser", JSON.stringify(user));
     localStorage.setItem("users", JSON.stringify(users));
     insertTransaction();
@@ -94,9 +91,9 @@ function insertTransaction() {
   user.transactions.forEach((data) => {
     tableBody.innerHTML += `        <tr>
           <td>${data.date}</td>
-          <td>${data.des}</td>
+          <td style="font-weight: bold;">${data.des}</td>
           <td>${data.category}</td>
-          <td>${data.amount}</td>
+          <td style="font-weight: bold; ${data.type === "Income" ? "color: green" : "color: rgb(189, 2, 2)"}">${data.type === "Income" ? "+" : "-"}${user.currency}${data.amount}</td>
           <td>
             <button class="tableEditBtn" onclick="tableEdit('${data.id}')"><i class="ri-pencil-fill"></i></button>
             <button class="tableDeleteBtn" onclick="tableRemove('${data.id}')"><i class="ri-delete-bin-6-fill"></i></button>
@@ -119,14 +116,10 @@ function tableEdit(id) {
 function tableRemove(id) {
   const isConfirmed = confirm("Are you sure you want to delete transaction?");
   if (isConfirmed) {
-    const index = user.transactions.findIndex((ele) => ele.id === id);
-    user.transactions.splice(index, 1);
-    users.forEach((ele) => {
-      if (ele.id === user.id) {
-        ele = user;
-        return;
-      }
-    });
+    const objIndex = user.transactions.findIndex((ele) => ele.id === id);
+    user.transactions.splice(objIndex, 1);
+    const index = users.findIndex((ele) => ele.id === user.id);
+    users[index] = user;
     localStorage.setItem("loggedInUser", JSON.stringify(user));
     localStorage.setItem("users", JSON.stringify(users));
     insertTransaction();
@@ -176,9 +169,9 @@ function loadAmount() {
       balance -= Number(ele.amount);
     }
   });
-  currentBalance.innerHTML = balance.toFixed(2);
-  totalIncome.innerHTML = income.toFixed(2);
-  totalExpense.innerHTML = expense.toFixed(2);
+  currentBalance.innerHTML = `${user.currency}${balance.toFixed(2)}`;
+  totalIncome.innerHTML = `${user.currency}${income.toFixed(2)}`;
+  totalExpense.innerHTML = `${user.currency}${expense.toFixed(2)}`;
   totalTransaction.innerHTML = transaction;
   if (chart !== null) {
     chart.data.datasets[0].data = [income];
@@ -200,12 +193,8 @@ async function loadPage(page) {
 
     resetBtn.addEventListener("click", (e) => {
       user.transactions = [];
-      users.forEach((ele) => {
-        if (ele.id === user.id) {
-          ele = user;
-          return;
-        }
-      });
+      const index = users.findIndex((ele) => ele.id === user.id);
+      users[index] = user;
       localStorage.setItem("loggedInUser", JSON.stringify(user));
       localStorage.setItem("users", JSON.stringify(users));
       insertTransaction();
@@ -259,17 +248,35 @@ async function loadPage(page) {
         insertTransaction();
       } else if (e.target.value === "Income") {
         user = JSON.parse(localStorage.getItem("loggedInUser"));
-        user.transactions = transactions.filter(
+        user.transactions = user.transactions.filter(
           (ele) => ele.type === e.target.value,
         );
         insertTransaction();
       } else {
         user = JSON.parse(localStorage.getItem("loggedInUser"));
-        user.transactions = transactions.filter(
+        user.transactions = user.transactions.filter(
           (ele) => ele.type === e.target.value,
         );
         insertTransaction();
       }
+    });
+  } else {
+    const settingsForm = document.querySelector("#settingsForm");
+    const name = document.querySelector("#name");
+
+    name.value = user.userName;
+    settingsForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const userName = e.target[0].value.trim();
+      const currency = e.target[1].value;
+      user.userName = userName;
+      user.currency = currency;
+      const index = users.findIndex((ele) => ele.id === user.id);
+      users[index] = user;
+      localStorage.setItem("loggedInUser", JSON.stringify(user));
+      localStorage.setItem("users", JSON.stringify(users));
+      alert("Settings saved successfully");
+      username.innerHTML = user.userName;
     });
   }
 }
